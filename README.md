@@ -1,53 +1,52 @@
 # Swift.String
 
-If you get confused with relations between Swift strings and their unicode represantations this article is for you.
+If you get confused with relationships between Swift strings and their unicode represantations this article is for you.
 
-In C, C++, JavaScript you can easily get integer code of the given letter and work with a string as with an array of integer numbers. It may be useful in some algorithms, but I couldn't figure out how to do it in Swift. I was expecting something like this:
+In C, C++, JavaScript you can easily get integer code of the given letter and work with a string as with an array of integer numbers. It may be useful in some algorithms to represent a string that way, but I couldn't figure out how to do it in Swift. I was expecting something like this:
 
-    // Declare string
     let helloString = "Hello"
-
-    // Get code
     let eCode = helloString.codePoint(at: 1) // expected String method
-
-    // Use result
     print("'e' =", eCode) // 'e' = 101
 
 but eventually I finished with this:
 
-    // Get code
+    ```Swift
     let eIndex = helloString.index(after: helloString.startIndex)
     let eCode = helloString[eIndex].unicodeScalars.first?.value
-
-    // Use value
     print("'e' =", eCode!) // 'e' = 101
+    ```
 
-Let's figure out what happened
+Let's figure this out.
 
 ## Unicode
 [Unicode standard][Unicode standard] describes more than 137.000 characters and the ways of working with them. Put simple, Unicode defines a huge table of different characters:
 
-![Picture 1][Unicode Simple Table Picture]
-*Picture 1 Unicode simplified characters table*
+*Table1 Unicode simplified characters table*
+| Code           |  ...  |  41 |  42 |  43 |  ...  | 416 | 417 | 418 |  ...  |
+|----------------|:-----:|:---:|:---:|:---:|:-----:|:---:|:---:|:---:|:-----:|
+| **Character**  |**...**|**A**|**B**|**C**|**...**|**Ж**|**З**|**И**|**...**|
+
 
 each of which has its corresponding integer value. Those characters are called **Unicode scalars** because they are from Unicode and they are primitive: there is one to one relationship between integer code and a character.
 
 I wouldn't be writting this article if it was all Unicode standard defines. There is also a list of rules how to handle Unicode scalars to get characters that are not in the table. Yes, people generated much more characters than can fit in the table:
 
+    ```Swift
     let flag = "🇺🇸" // comprises of two Unicode scalars
     let eWithAccent = "é" // may be encoded with one Unicode scalar or with two
+    ```
 
 With the table and rules of joining Unicode scalars we can get a way to mirror any character into one or more integer values. For any scalar Unicode standard reserves [21 bits][Unicode standard FAQ] to encode it. Our computers mostly work with Integers of length: 8, 16, 32, ... bits. So Unicode standard also describes how to encode unicode strings with integers of length 8 and 16 bits, defining UTF-8 and UTF-16 encodings respectively.
 
-![Picture 2][DifferentEncodings Picture]
-*Picture 2 One character in different encodings*
+![Picture 1][DifferentEncodings Picture]
+*Picture 1 One character in different encodings*
 
 ## Swift.String
 > "All problems in computer science can be solved by another level of indirection" [David Wheeler][David Wheeler quote]
 
 Swift strings fully support Unicode. It means that string "Flag-🇺🇸" has a length (count) of 6 characters. It is especially  convinient if you ever tried to get number of characters in some other languages - when you see 6 characters and get length of 9!
 
-Thus, Swift.String type encapsulates all the complexity of [Unicode scalar] (feel free to open it and read). And that's great, but how can we get coveted integer values of the string's characters? Let's consider the type hierarchy of the String:
+Thus, Swift.String type encapsulates all the complexity of [Unicode standard][Unicode standard] (feel free to open it and read). And that's great, but how can we get coveted integer values of the string's characters? Let's consider the relationships among different types around String type:
 
 ```Swift
 let string = "Hi 😀"
@@ -79,8 +78,12 @@ let charScalars: [Unicode.Scalar] = Array(charScalarsView)
 let charValues: [UInt32] = charScalars.map{ $0.value }
 // charValues = [72]
 ```
+ 
 
-In the listing above we see types Swift engineers developed to connect human-readable String as an array of characters and its integer representations while encoded. The best way to get acquainted with them is to read official [Swift.String documentation][Swift.String documentation]
+![Picture 2][StringTypesScheme Picture]
+*Picture 2 Schematic presentation*
+
+In the listing and scheme above we see types Swift engineers developed to connect human-readable String as an array of characters and its integer representations while encoded. The best way to get acquainted with them closer is to read official [Swift.String documentation][Swift.String documentation]
 
 ## Conclusion
 What initially seemed to me as an inconvenience of working with Swift.String type now I see as a rigth way to abstract out String as an array of letters from its representation in different encodings. 
@@ -102,6 +105,6 @@ What initially seemed to me as an inconvenience of working with Swift.String typ
 [Unicode standard FAQ]:http://www.unicode.org/faq//utf_bom.html#UTF32
 [David Wheeler quote]:https://en.wikipedia.org/wiki/Indirection
 [Swift.String documentation]:https://developer.apple.com/documentation/swift/string
-[Unicode Simple Table Picture]:pict/UnicodeTable.png
+[StringTypesScheme Picture]:pict/StringTypes.png
 [DifferentEncodings Picture]:pict/DifferentEncodings.png
 
