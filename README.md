@@ -31,10 +31,10 @@ each of which has its corresponding integer value. Those characters are called *
 
 I wouldn't be writting this article if it was all Unicode standard defines. There is also a list of rules how to handle Unicode scalars to get characters that are not in the table. Yes, people generated much more characters than can fit in the table:
 
-    ```Swift
-    let flag = "🇺🇸" // comprises of two Unicode scalars
-    let eWithAccent = "é" // may be encoded with one Unicode scalar or with two
-    ```
+```Swift
+let flag = "🇺🇸" // comprises of two Unicode scalars
+let eWithAccent = "é" // may be encoded with one Unicode scalar or with two
+```
 
 With the table and rules of joining Unicode scalars we can get a way to mirror any character into one or more integer values. For any scalar Unicode standard reserves [21 bits][Unicode standard FAQ] to encode it. Our computers mostly work with Integers of length: 8, 16, 32, ... bits. So Unicode standard also describes how to encode unicode strings with integers of length 8 and 16 bits, defining UTF-8 and UTF-16 encodings respectively.
 
@@ -86,12 +86,12 @@ let charValues: [UInt32] = charScalars.map{ $0.value }
 In the listing and scheme above we see types Swift engineers developed to connect human-readable String as an array of characters and its integer representations while encoded. The best way to get acquainted with them closer is to read official [Swift.String documentation][Swift.String documentation]
 
 ## Conclusion
-What initially seemed to me as an inconvenience of working with Swift.String type now I see as a rigth way to abstract out String as an array of letters from its representation in different encodings. 
+What initially seemed to me as an inconvenience of working with Swift.String type now I see as a right way to abstract out String as an array of letters from its representation in different encodings. 
 1. String is a sequence of characters
 1. Each character may be encoded with one or more Unicode scalars
-1. Each Unicode scalar requires at max 21 bits but there are UTF-8 and UTF-16 encodings that developed to be represent those 21 bits in shorter integer types
+1. Each Unicode scalar requires at max 21 bits but there are UTF-8 and UTF-16 encodings that developed to represent those 21 bits in shorter integer types
 1. Swift.String and Swift.Character have 'unicodeScalars' property to get sequence of Unicode scalars
-1. Using Array initializer with this UnicodeScalar type we can get an array of UInt32 integers which encodes given string
+1. Using Array initializer with this UnicodeScalarView type we can get an array of UInt32 integers which encodes given string
 
         let string = "Hello 🌎"
         let scalars = Array(string.unicodeScalars).map { $0.value }
