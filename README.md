@@ -27,7 +27,7 @@ Let's figure this out.
 | **Character**  |**...**|**A**|**B**|**C**|**...**|**Ж**|**З**|**И**|**...**|
 
 
-each of which has its corresponding integer value. Those characters are called **Unicode scalars** because they are from Unicode and they are primitive: there is one to one relationship between integer code and a character.
+each of which has its corresponding integer value. Those characters are called **Unicode scalars** because they are from Unicode and they are primitive: there is one to one relationship between integer code and a character or a part of a character.
 
 I wouldn't be writting this article if it was all Unicode standard defines. There is also a list of rules how to handle Unicode scalars to get characters that are not in the table. Yes, people generated much more characters than can fit in the table:
 
